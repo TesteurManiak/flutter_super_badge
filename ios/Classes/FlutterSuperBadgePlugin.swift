@@ -30,17 +30,17 @@ public class FlutterSuperBadgePlugin: NSObject, FlutterPlugin {
             if #available(iOS 16.0, *) {
                 let center = UNUserNotificationCenter.current()
                 center.setBadgeCount(count) { (error) -> () in
-                    guard let error = error else {
-                        result(
-                            FlutterError(
-                                code: "PLATFORM_ERROR",
-                                message: error?.localizedDescription,
-                                details: nil
-                            )
-                        )
+                    if (error == nil) {
+                        result(nil)
                         return
                     }
-                    result(nil)
+                    result(
+                        FlutterError(
+                            code: "UPDATE_BADGE_FAILED",
+                            message: error.debugDescription,
+                            details: nil
+                        )
+                    )
                 }
             } else {
                 UIApplication.shared.applicationIconBadgeNumber = count

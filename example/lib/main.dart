@@ -69,22 +69,36 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '${counterNotifier.value} notifications',
-              style: theme.textTheme.headlineMedium,
-            ),
-            ElevatedButton.icon(
-              onPressed: reset,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Reset Badge'),
+            ValueListenableBuilder<int>(
+                valueListenable: counterNotifier,
+                builder: (context, count, _) {
+                  return Text(
+                    '$count notifications',
+                    style: theme.textTheme.headlineMedium,
+                  );
+                }),
+            ValueListenableBuilder<bool>(
+              valueListenable: loadingNotifier,
+              builder: (context, isLoading, _) {
+                return ElevatedButton.icon(
+                  onPressed: isLoading ? null : reset,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Reset Badge'),
+                );
+              },
             )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: incrementCounter,
-        tooltip: 'Increment Notifications Count',
-        child: const Icon(Icons.add),
+      floatingActionButton: ValueListenableBuilder<bool>(
+        valueListenable: loadingNotifier,
+        builder: (context, isLoading, _) {
+          return FloatingActionButton(
+            onPressed: isLoading ? null : incrementCounter,
+            tooltip: 'Increment Notifications Count',
+            child: const Icon(Icons.add),
+          );
+        },
       ),
     );
   }
