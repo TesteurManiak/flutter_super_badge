@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_super_badge/flutter_super_badge.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +36,20 @@ class _MyHomePageState extends State<MyHomePage> {
   final flutterSuperBadge = FlutterSuperBadge();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadingNotifier.value = true;
+      Permission.notification.isDenied.then((value) async {
+        if (value) {
+          await Permission.notification.request();
+        }
+        loadingNotifier.value = false;
+      });
+    });
+  }
+
+  @override
   void dispose() {
     counterNotifier.dispose();
     loadingNotifier.dispose();
@@ -60,10 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton.icon(
               onPressed: reset,
-              icon: Icon(
-                Icons.refresh,
-                color: theme.colorScheme.onPrimary,
-              ),
+              icon: const Icon(Icons.refresh),
               label: const Text('Reset Badge'),
             )
           ],

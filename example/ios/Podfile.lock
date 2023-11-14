@@ -2,21 +2,27 @@ PODS:
   - Flutter (1.0.0)
   - flutter_super_badge (0.0.1):
     - Flutter
+  - permission_handler_apple (9.1.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_super_badge (from `.symlinks/plugins/flutter_super_badge/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_super_badge:
     :path: ".symlinks/plugins/flutter_super_badge/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_super_badge: 9f39f37c313896facf9dc832bc868a130b14ae90
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
 
-PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+PODFILE CHECKSUM: 609f6c3a6f90025fd4249c13f18ff19feff89ed1
 
 COCOAPODS: 1.14.2
