@@ -10,8 +10,9 @@ class MethodChannelFlutterSuperBadge extends FlutterSuperBadgePlatform {
   final methodChannel = const MethodChannel('flutter_super_badge');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<bool> isAppBadgeSupported() {
+    return methodChannel
+        .invokeMethod<bool>('isAppBadgeSupported')
+        .then((value) => value ?? false);
   }
 }
