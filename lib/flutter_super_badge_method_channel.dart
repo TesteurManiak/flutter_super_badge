@@ -15,4 +15,14 @@ class MethodChannelFlutterSuperBadge extends FlutterSuperBadgePlatform {
         .invokeMethod<bool>('isAppBadgeSupported')
         .then((value) => value ?? false);
   }
+
+  @override
+  Future<void> updateBadgeCount(int count) {
+    return methodChannel.invokeMethod<void>('updateBadgeCount', count);
+  }
+
+  @override
+  Future<void> removeBadge() {
+    return methodChannel.invokeMethod<void>('removeBadge');
+  }
 }

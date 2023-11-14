@@ -26,4 +26,12 @@ abstract class FlutterSuperBadgePlatform extends PlatformInterface {
   Future<bool> isAppBadgeSupported() {
     throw UnimplementedError('isAppBadgeSupported() has not been implemented.');
   }
+
+  Future<void> updateBadgeCount(int count) {
+    throw UnimplementedError('updateBadgeCount() has not been implemented.');
+  }
+
+  Future<void> removeBadge() {
+    throw UnimplementedError('removeBadge() has not been implemented.');
+  }
 }
