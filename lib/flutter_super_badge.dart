@@ -5,7 +5,8 @@ class FlutterSuperBadge {
     return FlutterSuperBadgePlatform.instance.isAppBadgeSupported();
   }
 
-  Future<void> updateBadgeCount(int count) {
+  Future<void> updateBadgeCount(int count) async {
+    if (count < 0) return;
     return FlutterSuperBadgePlatform.instance.updateBadgeCount(count);
   }
 
