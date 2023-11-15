@@ -13,9 +13,7 @@ Inspired by [flutter_app_badger][flutter_app_badger] & [flutter_app_badge_contro
 
 ## Getting Started
 
-### iOS
-
-On iOS you will have to request for notification permissions (e.g. with [permission_handler][permission_handler])
+You will have to request for notification permissions (e.g. with [permission_handler][permission_handler])
 
 ```dart
 Permission.notification.isDenied.then((value) {
@@ -23,7 +21,9 @@ Permission.notification.isDenied.then((value) {
 });
 ```
 
-Also add the following to your `Info.plist` file:
+### iOS
+
+On iOS, you will have to add the following to your `Info.plist` file:
 
 ```xml
 <key>UIBackgroundModes</key>
@@ -34,7 +34,9 @@ Also add the following to your `Info.plist` file:
 
 ### Android
 
-There's no official API to update the app badge count on Android. But some launchers support it. The integration is done via the [ShortcutBadgerX][shortcutbadgerx] (forked from [ShortcutBadger][shortcutbadger]) library.
+There's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, an ongoing notification (not dismissable) with the count is created.
+
+Some launchers support the notification count display. The integration is done via the [ShortcutBadgerX][shortcutbadgerx] (forked from [ShortcutBadger][shortcutbadger]) library.
 
 #### Supported Launchers
 

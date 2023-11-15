@@ -32,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final counterNotifier = ValueNotifier<int>(0);
   final loadingNotifier = ValueNotifier<bool>(false);
-  final enabledNotifier = ValueNotifier<bool>(false);
   final badgeSupportedNotifier = ValueNotifier<bool?>(null);
 
   final flutterSuperBadge = FlutterSuperBadge();
@@ -40,9 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
-    loadingNotifier.addListener(enabledListener);
-    badgeSupportedNotifier.addListener(enabledListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       loadingNotifier.value = true;
@@ -59,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     counterNotifier.dispose();
     loadingNotifier.dispose();
-    enabledNotifier.dispose();
     badgeSupportedNotifier.dispose();
     super.dispose();
   }
@@ -92,10 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 }),
             ValueListenableBuilder<bool>(
-              valueListenable: enabledNotifier,
-              builder: (context, isEnabled, _) {
+              valueListenable: loadingNotifier,
+              builder: (context, isLoading, _) {
                 return ElevatedButton.icon(
-                  onPressed: isEnabled ? reset : null,
+                  onPressed: !isLoading ? reset : null,
                   icon: const Icon(Icons.refresh),
                   label: const Text('Reset Badge'),
                 );
@@ -105,13 +100,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: ValueListenableBuilder<bool>(
-        valueListenable: enabledNotifier,
-        builder: (context, isEnabled, _) {
+        valueListenable: loadingNotifier,
+        builder: (context, isLoading, _) {
           return FloatingActionButton(
             disabledElevation: 0,
-            backgroundColor: isEnabled ? null : Colors.grey[200],
-            foregroundColor: isEnabled ? null : Colors.grey[400],
-            onPressed: isEnabled ? incrementCounter : null,
+            backgroundColor: !isLoading ? null : Colors.grey[200],
+            foregroundColor: !isLoading ? null : Colors.grey[400],
+            onPressed: !isLoading ? incrementCounter : null,
             tooltip: 'Increment Notifications Count',
             child: const Icon(Icons.add),
           );
@@ -136,10 +131,5 @@ class _MyHomePageState extends State<MyHomePage> {
 
     counterNotifier.value = 0;
     loadingNotifier.value = false;
-  }
-
-  void enabledListener() {
-    enabledNotifier.value =
-        !loadingNotifier.value && (badgeSupportedNotifier.value ?? false);
   }
 }
