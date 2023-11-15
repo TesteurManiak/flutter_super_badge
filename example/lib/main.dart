@@ -32,20 +32,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final counterNotifier = ValueNotifier<int>(0);
   final loadingNotifier = ValueNotifier<bool>(false);
+  final enabledNotifier = ValueNotifier<bool>(false);
+  final badgeSupportedNotifier = ValueNotifier<bool?>(null);
 
   final flutterSuperBadge = FlutterSuperBadge();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+    loadingNotifier.addListener(enabledListener);
+    badgeSupportedNotifier.addListener(enabledListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       loadingNotifier.value = true;
-      Permission.notification.isDenied.then((value) async {
-        if (value) {
-          await Permission.notification.request();
-        }
-        loadingNotifier.value = false;
+
+      await Permission.notification.isDenied.then((value) async {
+        if (value) await Permission.notification.request();
       });
+
+      badgeSupportedNotifier.value =
+          await flutterSuperBadge.isAppBadgeSupported();
+
+      loadingNotifier.value = false;
     });
   }
 
@@ -53,6 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     counterNotifier.dispose();
     loadingNotifier.dispose();
+    enabledNotifier.dispose();
+    badgeSupportedNotifier.dispose();
     super.dispose();
   }
 
@@ -69,6 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ValueListenableBuilder<bool?>(
+              valueListenable: badgeSupportedNotifier,
+              builder: (context, isSupported, _) {
+                return Text('Badge supported: ${isSupported ?? 'unknown'}');
+              },
+            ),
             ValueListenableBuilder<int>(
                 valueListenable: counterNotifier,
                 builder: (context, count, _) {
@@ -78,10 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 }),
             ValueListenableBuilder<bool>(
-              valueListenable: loadingNotifier,
-              builder: (context, isLoading, _) {
+              valueListenable: enabledNotifier,
+              builder: (context, isEnabled, _) {
                 return ElevatedButton.icon(
-                  onPressed: isLoading ? null : reset,
+                  onPressed: isEnabled ? reset : null,
                   icon: const Icon(Icons.refresh),
                   label: const Text('Reset Badge'),
                 );
@@ -91,10 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: ValueListenableBuilder<bool>(
-        valueListenable: loadingNotifier,
-        builder: (context, isLoading, _) {
+        valueListenable: enabledNotifier,
+        builder: (context, isEnabled, _) {
           return FloatingActionButton(
-            onPressed: isLoading ? null : incrementCounter,
+            onPressed: isEnabled ? incrementCounter : null,
             tooltip: 'Increment Notifications Count',
             child: const Icon(Icons.add),
           );
@@ -119,5 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     counterNotifier.value = 0;
     loadingNotifier.value = false;
+  }
+
+  void enabledListener() {
+    enabledNotifier.value =
+        !loadingNotifier.value && (badgeSupportedNotifier.value ?? false);
   }
 }

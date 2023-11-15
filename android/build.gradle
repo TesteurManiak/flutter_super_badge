@@ -16,6 +16,7 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -23,7 +24,7 @@ apply plugin: 'com.android.library'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.example.flutter_super_badge'
+        namespace 'com.maniak.flutter_super_badge'
     }
 
     compileSdkVersion 33
@@ -51,4 +52,8 @@ android {
             }
         }
     }
+}
+
+dependencies {
+    implementation 'com.github.rlgo:ShortcutBadgerX:1.2.1'
 }

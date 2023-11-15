@@ -22,7 +22,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.flutter_super_badge
+        package: com.maniak.flutter_super_badge
         pluginClass: FlutterSuperBadgePlugin
       ios:
         pluginClass: FlutterSuperBadgePlugin
