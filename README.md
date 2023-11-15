@@ -125,11 +125,6 @@ There's no official API to update the app badge count on Android. But some launc
     </tr>
 </table>
 
-* Nova launcher with TeslaUnread, Apex launcher, ADW Launcher provided by [notz](https://github.com/notz)
-* Solid launcher provided by [MajeurAndroid](https://github.com/MajeurAndroid)
-* KISS Launcher provided by [alexander255](https://github.com/alexander255)
-
-
 [flutter_app_badger]: https://pub.dev/packages/flutter_app_badger
 [flutter_app_badge_control]: https://pub.dev/packages/flutter_app_badge_control
 [permission_handler]: https://pub.dev/packages/permission_handler
