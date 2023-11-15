@@ -10,8 +10,6 @@ public class FlutterSuperBadgePlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "isAppBadgeSupported":
-            result(true)
         case "updateBadgeCount":
             guard let count = call.arguments as? Int else {
                 result(FlutterError(code: "INVALID_ARGUMENT", message: "Invalid count value", details: nil))

@@ -51,9 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
         if (value) await Permission.notification.request();
       });
 
-      badgeSupportedNotifier.value =
-          await flutterSuperBadge.isAppBadgeSupported();
-
       loadingNotifier.value = false;
     });
   }

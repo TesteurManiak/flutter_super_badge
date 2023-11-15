@@ -8,7 +8,6 @@ Inspired by [flutter_app_badger][flutter_app_badger] & [flutter_app_badge_contro
 
 |                       | Android | iOS |
 | --------------------- | ------- | --- |
-| `isAppBadgeSupported` | ✅      | ✅  |
 | `updateBadgeCount`    | ✅      | ✅  |
 | `removeBadge`         | ✅      | ✅  |
 
