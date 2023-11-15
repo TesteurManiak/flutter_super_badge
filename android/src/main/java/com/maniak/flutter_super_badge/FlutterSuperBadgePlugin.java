@@ -86,6 +86,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   private Notification createNotification(int count) {
     Builder builder = new Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(applicationContext.getApplicationInfo().icon)
+            // TODO(Guillaume): Localize strings
             .setContentTitle("You have " + count + " notifications")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true);
