@@ -60,10 +60,6 @@ There's no official API to update the app badge count on Android. But some launc
     </tr>
     <tr>
         <td width="130">
-            <h3>Xiaomi</h3>
-            <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_xiaomi.png"/>
-        </td>
-        <td width="130">
             <h3>ASUS</h3>
             <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_asus.png"/>
         </td>
@@ -75,10 +71,15 @@ There's no official API to update the app badge count on Android. But some launc
             <h3>APEX</h3>
             <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_apex.png"/>
         </td>
-    <tr>
         <td width="130">
             <h3>NOVA</h3>
             <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_nova.png"/>
+        </td>
+    <tr>
+        <td width="130">
+            <h3>Yandex</h3>
+            <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_yandex.png"/>
+            (1.1.23+)
         </td>
         <td width="130">
             <h3>Huawei</h3>
@@ -116,11 +117,6 @@ There's no official API to update the app badge count on Android. But some launc
         <td width="130">
             <h3>LaunchTime</h3>
             <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_launchtime.png"/>
-        </td>
-        <td width="130">
-            <h3>Yandex</h3>
-            <img src="https://raw.github.com/leolin310148/ShortcutBadger/master/screenshots/ss_yandex.png"/>
-            (1.1.23+)
         </td>
     </tr>
 </table>
