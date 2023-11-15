@@ -1,4 +1,4 @@
-import 'flutter_super_badge_platform_interface.dart';
+import 'src/flutter_super_badge_platform_interface.dart';
 
 class FlutterSuperBadge {
   Future<void> updateBadgeCount(int count) async {
