@@ -4,6 +4,11 @@ A native plugin to update the app badge count on the app icon.
 
 Inspired by [flutter_app_badger][flutter_app_badger] & [flutter_app_badge_control][flutter_app_badge_control].
 
+<p>
+    <img src="screenshots/ios.jpeg" height="228">
+    <img src="screenshots/android.jpeg" height="228">
+</p>
+
 ## Supported Platforms
 
 |                       | Android | iOS |
