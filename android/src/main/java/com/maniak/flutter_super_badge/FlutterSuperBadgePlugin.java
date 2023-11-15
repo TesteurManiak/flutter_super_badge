@@ -27,8 +27,8 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   private Context applicationContext;
   private NotificationManager notificationManager;
 
-  static private final String channelId = "SUPER_BADGE_CHANNEL_ID";
-  static private final int notificationId = 1;
+  static private final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
+  static private final int NOTIFICATION_ID = 1;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -47,8 +47,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
         updateBadgeCount(result, call.arguments);
         break;
       case "removeBadge":
-        notificationManager.cancelAll();
-        result.success(null);
+        removeBadge(result);
         break;
       default:
         result.notImplemented();
@@ -61,11 +60,21 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
     channel.setMethodCallHandler(null);
   }
 
+  private void removeBadge(@NonNull Result result) {
+    try {
+      notificationManager.cancel(NOTIFICATION_ID);
+      ShortcutBadger.removeCount(applicationContext);
+      result.success(null);
+    } catch (Exception e) {
+      result.error("REMOVE_BADGE_FAILED", e.getMessage(), null);
+    }
+  }
+
   private void updateBadgeCount(@NonNull Result result, Object arguments) {
     try {
       final int count = Integer.parseInt(arguments.toString());
       final Notification notification = createNotification(count);
-      notificationManager.notify(notificationId, notification);
+      notificationManager.notify(NOTIFICATION_ID, notification);
 
       ShortcutBadger.applyCount(applicationContext, count);
       result.success(null);
@@ -75,7 +84,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   }
 
   private Notification createNotification(int count) {
-    Builder builder = new Builder(applicationContext, channelId)
+    Builder builder = new Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(applicationContext.getApplicationInfo().icon)
             .setContentTitle("You have " + count + " notifications")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -90,7 +99,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
       String description = context.getString(R.string.channel_description);
       int importance =  NotificationManager.IMPORTANCE_DEFAULT;
 
-      NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+      NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
       channel.setDescription(description);
       channel.setShowBadge(true);
 
