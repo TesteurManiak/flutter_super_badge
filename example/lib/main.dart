@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_super_badge/flutter_super_badge.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -47,9 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       loadingNotifier.value = true;
 
-      await Permission.notification.isDenied.then((value) async {
-        if (value) await Permission.notification.request();
-      });
+      if (Platform.isIOS || Platform.isMacOS) {
+        await Permission.notification.isDenied.then((value) async {
+          if (value) await Permission.notification.request();
+        });
+      }
 
       badgeSupportedNotifier.value =
           await flutterSuperBadge.isAppBadgeSupported();
@@ -111,6 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
         valueListenable: enabledNotifier,
         builder: (context, isEnabled, _) {
           return FloatingActionButton(
+            disabledElevation: 0,
+            backgroundColor: isEnabled ? null : Colors.grey[200],
+            foregroundColor: isEnabled ? null : Colors.grey[400],
             onPressed: isEnabled ? incrementCounter : null,
             tooltip: 'Increment Notifications Count',
             child: const Icon(Icons.add),
