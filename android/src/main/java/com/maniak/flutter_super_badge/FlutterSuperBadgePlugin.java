@@ -1,5 +1,6 @@
 package com.maniak.flutter_super_badge;
 
+import android.app.NotificationManager;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -19,27 +20,34 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private Context applicationContext;
+  private NotificationManager notificationManager;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_super_badge");
     channel.setMethodCallHandler(this);
     applicationContext = flutterPluginBinding.getApplicationContext();
+    notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
   }
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    switch (call.method) {
+    final String method = call.method;
+    switch (method) {
       case "isAppBadgeSupported":
         result.success(ShortcutBadger.isBadgeCounterSupported(applicationContext));
+        break;
       case "updateBadgeCount":
         ShortcutBadger.applyCount(applicationContext, Integer.parseInt(call.arguments.toString()));
         result.success(null);
+        break;
       case "removeBadge":
-        ShortcutBadger.removeCount(applicationContext);
+        notificationManager.cancelAll();
         result.success(null);
+        break;
       default:
         result.notImplemented();
+        break;
     }
   }
 
