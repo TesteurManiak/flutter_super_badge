@@ -35,7 +35,8 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_super_badge");
     channel.setMethodCallHandler(this);
     applicationContext = flutterPluginBinding.getApplicationContext();
-    notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationManager =
+            (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
     createNotificationChannel(flutterPluginBinding.getApplicationContext());
   }
 
