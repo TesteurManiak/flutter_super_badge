@@ -1,4 +1,4 @@
-group 'com.example.flutter_super_badge'
+group 'com.maniak.flutter_super_badge'
 version '1.0'
 
 buildscript {
