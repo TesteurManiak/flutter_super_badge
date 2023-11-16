@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 
+import java.util.HashMap;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -73,22 +75,22 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
 
   private void updateBadgeCount(@NonNull Result result, Object arguments) {
     try {
-      final int count = Integer.parseInt(arguments.toString());
-      final Notification notification = createNotification(count);
+      final BadgeConfiguration configuration = 
+              BadgeConfiguration.fromJson((HashMap<String, Object>) arguments);
+      final Notification notification = createNotification(configuration.title);
       notificationManager.notify(NOTIFICATION_ID, notification);
 
-      ShortcutBadger.applyCount(applicationContext, count);
+      ShortcutBadger.applyCount(applicationContext, configuration.count);
       result.success(null);
     } catch (Exception e) {
       result.error("UPDATE_BADGE_COUNT_FAILED", e.getMessage(), null);
     }
   }
 
-  private Notification createNotification(int count) {
+  private Notification createNotification(String title) {
     Builder builder = new Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(applicationContext.getApplicationInfo().icon)
-            // TODO(Guillaume): Localize strings
-            .setContentTitle("You have " + count + " notifications")
+            .setContentTitle(title)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true);
 

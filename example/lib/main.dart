@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final loadingNotifier = ValueNotifier<bool>(false);
   final badgeSupportedNotifier = ValueNotifier<bool?>(null);
 
-  final flutterSuperBadge = FlutterSuperBadge();
+  final flutterSuperBadge = const FlutterSuperBadge();
 
   @override
   void initState() {

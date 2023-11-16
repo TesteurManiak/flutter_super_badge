@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_super_badge/flutter_super_badge.dart';
 
 import 'flutter_super_badge_platform_interface.dart';
 
@@ -10,8 +13,16 @@ class MethodChannelFlutterSuperBadge extends FlutterSuperBadgePlatform {
   final methodChannel = const MethodChannel('flutter_super_badge');
 
   @override
-  Future<void> updateBadgeCount(int count) async {
-    await methodChannel.invokeMethod('updateBadgeCount', count);
+  Future<void> updateBadgeCount(
+    int count, {
+    required AndroidBadgeConfiguration androidConfiguration,
+  }) async {
+    final args = switch (Platform.isAndroid) {
+      true => androidConfiguration.toArguments(count),
+      false => count,
+    };
+
+    await methodChannel.invokeMethod('updateBadgeCount', args);
   }
 
   @override
