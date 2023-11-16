@@ -1,9 +1,12 @@
 package com.maniak.flutter_super_badge;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -13,14 +16,21 @@ import androidx.core.app.NotificationCompat.Builder;
 import java.util.HashMap;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 /** FlutterSuperBadgePlugin */
-public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler {
+public class FlutterSuperBadgePlugin
+        implements FlutterPlugin,
+        MethodCallHandler,
+        ActivityAware,
+        PluginRegistry.NewIntentListener {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -28,6 +38,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   private MethodChannel channel;
   private Context applicationContext;
   private NotificationManager notificationManager;
+  private Activity mainActivity;
 
   static private final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
   static private final int NOTIFICATION_ID = 1;
@@ -63,6 +74,28 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
     channel.setMethodCallHandler(null);
   }
 
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    binding.addOnNewIntentListener(this);
+    mainActivity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    mainActivity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    binding.addOnNewIntentListener(this);
+    mainActivity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    mainActivity = null;
+  }
+
   private void removeBadge(@NonNull Result result) {
     try {
       notificationManager.cancel(NOTIFICATION_ID);
@@ -75,7 +108,7 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
 
   private void updateBadgeCount(@NonNull Result result, Object arguments) {
     try {
-      final BadgeConfiguration configuration = 
+      final BadgeConfiguration configuration =
               BadgeConfiguration.fromJson((HashMap<String, Object>) arguments);
       final Notification notification = createNotification(configuration.title);
       notificationManager.notify(NOTIFICATION_ID, notification);
@@ -88,11 +121,25 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
   }
 
   private Notification createNotification(String title) {
+    Intent intent = mainActivity.getIntent();
+
+    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      flags |= PendingIntent.FLAG_IMMUTABLE;
+    }
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NOTIFICATION_ID,
+            intent,
+            flags
+    );
+
     Builder builder = new Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(applicationContext.getApplicationInfo().icon)
             .setContentTitle(title)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setOngoing(true);
+            .setContentIntent(pendingIntent);
 
     return builder.build();
   }
@@ -111,5 +158,13 @@ public class FlutterSuperBadgePlugin implements FlutterPlugin, MethodCallHandler
               (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       notificationManager.createNotificationChannel(channel);
     }
+  }
+
+  @Override
+  public boolean onNewIntent(@NonNull Intent intent) {
+    if (mainActivity != null) {
+      mainActivity.setIntent(intent);
+    }
+    return false;
   }
 }
