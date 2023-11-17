@@ -1,6 +1,6 @@
 name: flutter_super_badge
 description: A native plugin to update the app badge count on the app icon.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/TesteurManiak/flutter_super_badge
 repository: https://github.com/TesteurManiak/flutter_super_badge
 issue_tracker: https://github.com/TesteurManiak/flutter_super_badge/issues
