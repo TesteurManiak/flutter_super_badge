@@ -34,3 +34,5 @@ flutter:
         pluginClass: FlutterSuperBadgePlugin
       ios:
         pluginClass: FlutterSuperBadgePlugin
+      macos:
+        pluginClass: FlutterSuperBadgePlugin
