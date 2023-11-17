@@ -135,7 +135,6 @@ Some launchers support the notification count display. The integration is done v
 
 ## TODO
 
-- Support macOS
 - Android: make the notification tap customizable
 
 [flutter_app_badger]: https://pub.dev/packages/flutter_app_badger
