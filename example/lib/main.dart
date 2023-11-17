@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_super_badge/flutter_super_badge.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -40,15 +42,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      loadingNotifier.value = true;
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        loadingNotifier.value = true;
 
-      await Permission.notification.isDenied.then((value) async {
-        if (value) await Permission.notification.request();
+        await Permission.notification.isDenied.then((value) async {
+          if (value) await Permission.notification.request();
+        });
+
+        loadingNotifier.value = false;
       });
-
-      loadingNotifier.value = false;
-    });
+    }
   }
 
   @override

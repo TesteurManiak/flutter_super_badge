@@ -18,14 +18,6 @@ Inspired by [flutter_app_badger][flutter_app_badger] & [flutter_app_badge_contro
 
 ## Getting Started
 
-You will have to request for notification permissions (e.g. with [permission_handler][permission_handler])
-
-```dart
-Permission.notification.isDenied.then((value) {
-    if (value) Permission.notification.request();
-});
-```
-
 ### iOS
 
 On iOS, you will have to add the following to your `Info.plist` file:
@@ -39,7 +31,17 @@ On iOS, you will have to add the following to your `Info.plist` file:
 
 ### Android
 
-There's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, a collapsed notification with the count is created.
+You will have to request for notification permissions (e.g. with [permission_handler][permission_handler])
+
+```dart
+Permission.notification.isDenied.then((value) {
+    if (value) Permission.notification.request();
+});
+```
+
+You can check the [example app][example_app] for a complete implementation.
+
+As there's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, a collapsed notification with the count is created.
 
 <p>
     <img src="https://raw.githubusercontent.com/TesteurManiak/flutter_super_badge/main/screenshots/android_notification.jpeg" width="500">
@@ -139,5 +141,6 @@ Some launchers support the notification count display. The integration is done v
 [flutter_app_badger]: https://pub.dev/packages/flutter_app_badger
 [flutter_app_badge_control]: https://pub.dev/packages/flutter_app_badge_control
 [permission_handler]: https://pub.dev/packages/permission_handler
+[example_app]: https://github.com/TesteurManiak/flutter_super_badge/blob/main/example/lib/main.dart
 [shortcutbadgerx]: https://github.com/rlgo/ShortcutBadgerX
 [shortcutbadger]: https://github.com/leolin310148/ShortcutBadger
