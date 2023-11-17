@@ -42,7 +42,7 @@ On iOS, you will have to add the following to your `Info.plist` file:
 There's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, a collapsed notification with the count is created.
 
 <p>
-    <img src="screenshots/android_notification.jpeg" width="500">
+    <img src="https://raw.githubusercontent.com/TesteurManiak/flutter_super_badge/main/screenshots/android_notification.jpeg" width="500">
 </p>
 
 Some launchers support the notification count display. The integration is done via the [ShortcutBadgerX][shortcutbadgerx] (forked from [ShortcutBadger][shortcutbadger]) library.
@@ -133,9 +133,8 @@ Some launchers support the notification count display. The integration is done v
 
 ## TODO
 
-### Android
-
-- Make the notification tap customizable
+- Support MacOS
+- Android: make the notification tap customizable
 
 [flutter_app_badger]: https://pub.dev/packages/flutter_app_badger
 [flutter_app_badge_control]: https://pub.dev/packages/flutter_app_badge_control
