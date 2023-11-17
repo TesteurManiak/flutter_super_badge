@@ -72,12 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ValueListenableBuilder<bool?>(
-              valueListenable: badgeSupportedNotifier,
-              builder: (context, isSupported, _) {
-                return Text('Badge supported: ${isSupported ?? 'unknown'}');
-              },
-            ),
             ValueListenableBuilder<int>(
                 valueListenable: counterNotifier,
                 builder: (context, count, _) {
@@ -116,10 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> incrementCounter() async {
-    counterNotifier.value++;
     loadingNotifier.value = true;
 
-    await flutterSuperBadge.updateBadgeCount(counterNotifier.value);
+    final newValue = counterNotifier.value + 1;
+    await flutterSuperBadge.updateBadgeCount(newValue);
+    counterNotifier.value = newValue;
 
     loadingNotifier.value = false;
   }
