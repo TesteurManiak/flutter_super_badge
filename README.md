@@ -39,7 +39,11 @@ On iOS, you will have to add the following to your `Info.plist` file:
 
 ### Android
 
-There's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, an ongoing notification (not dismissable) with the count is created.
+There's no official API to update the app badge count on Android. To ensure that at least the dot indicator is displayed on the launcher icon, a collapsed notification with the count is created.
+
+<p>
+    <img src="screenshots/android_notification.jpeg" width="500">
+</p>
 
 Some launchers support the notification count display. The integration is done via the [ShortcutBadgerX][shortcutbadgerx] (forked from [ShortcutBadger][shortcutbadger]) library.
 

@@ -9,17 +9,17 @@ export 'src/android_settings.dart';
 @immutable
 class FlutterSuperBadge {
   const FlutterSuperBadge({
-    this.androidConfiguration = const AndroidSettings(),
+    this.androidSettings = const AndroidSettings(),
   });
 
-  final AndroidSettings androidConfiguration;
+  final AndroidSettings androidSettings;
 
   Future<void> updateBadgeCount(int count) async {
     if (count < 0) return;
 
     return FlutterSuperBadgePlatform.instance.updateBadgeCount(
       count,
-      androidConfiguration: androidConfiguration,
+      androidSettings: androidSettings,
     );
   }
 

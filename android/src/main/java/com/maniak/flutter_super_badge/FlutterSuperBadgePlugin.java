@@ -110,19 +110,18 @@ public class FlutterSuperBadgePlugin
 
   private void updateBadgeCount(@NonNull Result result, Object arguments) {
     try {
-      BadgeConfiguration configuration =
-              BadgeConfiguration.from((HashMap<String, Object>) arguments);
-      Notification notification = createNotification(configuration);
+      BadgeSettings settings = BadgeSettings.from((HashMap<String, Object>) arguments);
+      Notification notification = createNotification(settings);
       notificationManager.notify(NOTIFICATION_ID, notification);
 
-      ShortcutBadger.applyCount(applicationContext, configuration.count);
+      ShortcutBadger.applyCount(applicationContext, settings.count);
       result.success(null);
     } catch (Exception e) {
       result.error("UPDATE_BADGE_COUNT_FAILED", e.getMessage(), null);
     }
   }
 
-  private Notification createNotification(BadgeConfiguration configuration) {
+  private Notification createNotification(BadgeSettings settings) {
     Intent intent = mainActivity.getIntent();
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
@@ -138,11 +137,11 @@ public class FlutterSuperBadgePlugin
     );
 
     Builder builder = new Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle(configuration.title)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentTitle(settings.title)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentIntent(pendingIntent);
 
-    String customIcon = configuration.icon;
+    String customIcon = settings.icon;
     if (customIcon == null || customIcon.isEmpty()) {
       builder.setSmallIcon(applicationContext.getApplicationInfo().icon);
     } else {
@@ -156,7 +155,7 @@ public class FlutterSuperBadgePlugin
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       CharSequence name = context.getString(R.string.channel_name);
       String description = context.getString(R.string.channel_description);
-      int importance =  NotificationManager.IMPORTANCE_DEFAULT;
+      int importance =  NotificationManager.IMPORTANCE_LOW;
 
       NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
       channel.setDescription(description);
