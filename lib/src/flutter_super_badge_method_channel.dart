@@ -15,7 +15,7 @@ class MethodChannelFlutterSuperBadge extends FlutterSuperBadgePlatform {
   @override
   Future<void> updateBadgeCount(
     int count, {
-    required AndroidBadgeConfiguration androidConfiguration,
+    required AndroidSettings androidConfiguration,
   }) async {
     final args = switch (Platform.isAndroid) {
       true => androidConfiguration.toArguments(count),

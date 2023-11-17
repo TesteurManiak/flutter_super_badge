@@ -1,5 +1,6 @@
 package com.maniak.flutter_super_badge;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -42,6 +43,7 @@ public class FlutterSuperBadgePlugin
 
   static private final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
   static private final int NOTIFICATION_ID = 1;
+  private static final String DRAWABLE = "drawable";
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -108,9 +110,9 @@ public class FlutterSuperBadgePlugin
 
   private void updateBadgeCount(@NonNull Result result, Object arguments) {
     try {
-      final BadgeConfiguration configuration =
-              BadgeConfiguration.fromJson((HashMap<String, Object>) arguments);
-      final Notification notification = createNotification(configuration.title);
+      BadgeConfiguration configuration =
+              BadgeConfiguration.from((HashMap<String, Object>) arguments);
+      Notification notification = createNotification(configuration);
       notificationManager.notify(NOTIFICATION_ID, notification);
 
       ShortcutBadger.applyCount(applicationContext, configuration.count);
@@ -120,7 +122,7 @@ public class FlutterSuperBadgePlugin
     }
   }
 
-  private Notification createNotification(String title) {
+  private Notification createNotification(BadgeConfiguration configuration) {
     Intent intent = mainActivity.getIntent();
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
@@ -136,10 +138,16 @@ public class FlutterSuperBadgePlugin
     );
 
     Builder builder = new Builder(applicationContext, CHANNEL_ID)
-            .setSmallIcon(applicationContext.getApplicationInfo().icon)
-            .setContentTitle(title)
+            .setContentTitle(configuration.title)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent);
+
+    String customIcon = configuration.icon;
+    if (customIcon == null || customIcon.isEmpty()) {
+      builder.setSmallIcon(applicationContext.getApplicationInfo().icon);
+    } else {
+      builder.setSmallIcon(getDrawableResourceId(customIcon));
+    }
 
     return builder.build();
   }
@@ -154,10 +162,19 @@ public class FlutterSuperBadgePlugin
       channel.setDescription(description);
       channel.setShowBadge(true);
 
-      final NotificationManager  notificationManager =
+      NotificationManager  notificationManager =
               (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       notificationManager.createNotificationChannel(channel);
     }
+  }
+
+  @SuppressLint("DiscouragedApi")
+  private int getDrawableResourceId(String name) {
+    return applicationContext.getResources().getIdentifier(
+            name,
+            DRAWABLE,
+            applicationContext.getPackageName()
+    );
   }
 
   @Override

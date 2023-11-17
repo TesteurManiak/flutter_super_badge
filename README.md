@@ -131,8 +131,7 @@ Some launchers support the notification count display. The integration is done v
 
 ### Android
 
-- [ ] Fix notification icon
-- [ ] Make the notification tap customizable
+- Make the notification tap customizable
 
 [flutter_app_badger]: https://pub.dev/packages/flutter_app_badger
 [flutter_app_badge_control]: https://pub.dev/packages/flutter_app_badge_control

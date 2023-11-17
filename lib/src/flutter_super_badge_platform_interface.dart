@@ -26,7 +26,7 @@ abstract class FlutterSuperBadgePlatform extends PlatformInterface {
 
   Future<void> updateBadgeCount(
     int count, {
-    required AndroidBadgeConfiguration androidConfiguration,
+    required AndroidSettings androidConfiguration,
   }) {
     throw UnimplementedError('updateBadgeCount() has not been implemented.');
   }

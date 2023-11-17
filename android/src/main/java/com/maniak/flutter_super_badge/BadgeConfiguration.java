@@ -1,19 +1,19 @@
 package com.maniak.flutter_super_badge;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class BadgeConfiguration {
-    public final int count;
-    public final String title;
+public class BadgeConfiguration implements Serializable {
+    public int count;
+    public String title;
+    public String icon;
 
-    public BadgeConfiguration(int count, String title) {
-        this.count = count;
-        this.title = title;
-    }
+    public static BadgeConfiguration from(HashMap<String, Object> arguments) {
+        BadgeConfiguration configuration = new BadgeConfiguration();
+        configuration.count = (int) arguments.get("count");
+        configuration.title = (String) arguments.get("title");
+        configuration.icon = (String) arguments.get("icon");
 
-    public static BadgeConfiguration fromJson(HashMap<String, Object> json) {
-        final int count = (int) json.get("count");
-        final String title = (String) json.get("title");
-        return new BadgeConfiguration(count, title);
+        return configuration;
     }
 }
