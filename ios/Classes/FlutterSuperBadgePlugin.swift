@@ -25,6 +25,8 @@ public class FlutterSuperBadgePlugin: NSObject, FlutterPlugin {
     
     private func updateBadgeCount(count: Int, result: @escaping FlutterResult) {
         DispatchQueue.main.async {
+            self.enableNotifications()
+            
             if #available(iOS 16.0, *) {
                 let center = UNUserNotificationCenter.current()
                 center.setBadgeCount(count) { (error) -> () in
@@ -45,6 +47,15 @@ public class FlutterSuperBadgePlugin: NSObject, FlutterPlugin {
                 result(nil)
             }
             
+        }
+    }
+    
+    private func enableNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.sound, .alert, .badge]) { granted, error in
+            if error == nil {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
         }
     }
 }

@@ -41,8 +41,8 @@ public class FlutterSuperBadgePlugin
   private NotificationManager notificationManager;
   private Activity mainActivity;
 
-  static private final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
-  static private final int NOTIFICATION_ID = 1;
+  private static final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
+  private static final int NOTIFICATION_ID = 1;
   private static final String DRAWABLE = "drawable";
 
   @Override
