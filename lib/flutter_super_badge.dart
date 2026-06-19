@@ -14,14 +14,12 @@ class FlutterSuperBadge {
 
   Future<void> updateBadgeCount(int count) async {
     if (count < 0) return;
-
     return FlutterSuperBadgePlatform.instance.updateBadgeCount(
       count,
-      androidSettings: androidSettings,
+      settings: androidSettings,
     );
   }
 
-  Future<void> removeBadge() {
-    return FlutterSuperBadgePlatform.instance.removeBadge();
-  }
+  Future<void> removeBadge() =>
+      FlutterSuperBadgePlatform.instance.removeBadge();
 }

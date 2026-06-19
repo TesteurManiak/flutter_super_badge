@@ -18,6 +18,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  pigeon: ^26.3.4
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -27,6 +28,4 @@ flutter:
         package: com.maniak.flutter_super_badge
         pluginClass: FlutterSuperBadgePlugin
       ios:
-        pluginClass: FlutterSuperBadgePlugin
-      macos:
         pluginClass: FlutterSuperBadgePlugin

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 typedef CountStringLocalization = String Function(int count);
 
 /// {@template android_settings}
-/// Customization options for the notification displayed on Android.
+/// Customization options for the notification displayed **on Android only**.
 /// {@endtemplate}
 @immutable
 class AndroidSettings {
@@ -20,14 +20,6 @@ class AndroidSettings {
 
   /// Specifies the icon to be used in the notification.
   final String? icon;
-
-  Map<String, dynamic> toArguments(int count) {
-    return {
-      'count': count,
-      'title': countStringLocalization(count),
-      'icon': icon,
-    };
-  }
 }
 
 String _defaultCountStringLocalization(int count) {
