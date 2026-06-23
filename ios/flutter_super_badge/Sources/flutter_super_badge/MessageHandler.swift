@@ -5,6 +5,10 @@
 //  Created by AdminGuigui on 19/06/2026.
 //
 
+import Flutter
+import UIKit
+import UserNotifications
+
 @available(iOS 16.0, *)
 class MessageHandler : NSObject, FlutterSuperBadgeApi {
     func updateBadgeCount(count: Int64, settings: AndroidBadgeSettings) throws {

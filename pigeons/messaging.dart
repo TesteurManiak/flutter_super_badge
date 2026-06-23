@@ -22,7 +22,8 @@ class AndroidBadgeSettings {
       package: 'com.maniak.flutter_super_badge',
       className: 'MethodChannelMessages',
     ),
-    swiftOut: 'ios/Classes/MethodChannelMessages.g.swift',
+    swiftOut:
+        'ios/flutter_super_badge/Sources/flutter_super_badge/MethodChannelMessages.g.swift',
   ),
 )
 @HostApi()
