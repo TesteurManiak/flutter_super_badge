@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_super_badge/flutter_super_badge.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -77,13 +75,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ValueListenableBuilder<int>(
-                valueListenable: counterNotifier,
-                builder: (context, count, _) {
-                  return Text(
-                    '$count notifications',
-                    style: theme.textTheme.headlineMedium,
-                  );
-                }),
+              valueListenable: counterNotifier,
+              builder: (context, count, _) {
+                return Text(
+                  '$count notifications',
+                  style: theme.textTheme.headlineMedium,
+                );
+              },
+            ),
             ValueListenableBuilder<bool>(
               valueListenable: loadingNotifier,
               builder: (context, isLoading, _) {
@@ -93,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: const Text('Reset Badge'),
                 );
               },
-            )
+            ),
           ],
         ),
       ),
