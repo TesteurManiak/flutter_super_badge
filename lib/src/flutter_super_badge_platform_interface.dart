@@ -1,6 +1,6 @@
-import 'package:flutter_super_badge/flutter_super_badge.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../flutter_super_badge.dart';
 import 'flutter_super_badge_method_channel.dart';
 
 abstract class FlutterSuperBadgePlatform extends PlatformInterface {
@@ -26,7 +26,7 @@ abstract class FlutterSuperBadgePlatform extends PlatformInterface {
 
   Future<void> updateBadgeCount(
     int count, {
-    required AndroidSettings androidSettings,
+    required AndroidSettings settings,
   }) {
     throw UnimplementedError('updateBadgeCount() has not been implemented.');
   }
