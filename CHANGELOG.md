@@ -1,3 +1,8 @@
+## 0.3.0
+
+* Refactor the package using Pigeon
+* Swift Package Manager (SPM) support for iOS
+
 ## 0.2.0
 
 * Feat: macOS support
