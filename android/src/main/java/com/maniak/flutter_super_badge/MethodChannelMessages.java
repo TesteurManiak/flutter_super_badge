@@ -27,7 +27,7 @@ import java.util.Objects;
 
 /** Generated class from Pigeon. */
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression", "serial"})
-public class FlutterSuperBadgePlugin {
+public class MethodChannelMessages {
   static boolean pigeonDoubleEquals(double a, double b) {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (a == 0.0 ? 0.0 : a) == (b == 0.0 ? 0.0 : b) || (Double.isNaN(a) && Double.isNaN(b));

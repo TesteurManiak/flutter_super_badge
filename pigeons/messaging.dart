@@ -17,10 +17,10 @@ class AndroidBadgeSettings {
   PigeonOptions(
     dartOut: 'lib/src/gen/method_channel_message.dart',
     javaOut:
-        'android/src/main/java/com/maniak/flutter_super_badge/MethodChannelMessages.kt',
+        'android/src/main/java/com/maniak/flutter_super_badge/MethodChannelMessages.java',
     javaOptions: JavaOptions(
       package: 'com.maniak.flutter_super_badge',
-      className: 'FlutterSuperBadgePlugin',
+      className: 'MethodChannelMessages',
     ),
     swiftOut: 'ios/Classes/MethodChannelMessages.g.swift',
   ),

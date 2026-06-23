@@ -1,186 +1,99 @@
 package com.maniak.flutter_super_badge;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationCompat.Builder;
 
-import java.util.HashMap;
+import com.maniak.flutter_super_badge.MethodChannelMessages.FlutterSuperBadgeApi;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.PluginRegistry;
-import me.leolin.shortcutbadger.ShortcutBadger;
 
 /** FlutterSuperBadgePlugin */
 public class FlutterSuperBadgePlugin
         implements FlutterPlugin,
-        MethodCallHandler,
         ActivityAware,
         PluginRegistry.NewIntentListener {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private MethodChannel channel;
-  private Context applicationContext;
-  private NotificationManager notificationManager;
-  private Activity mainActivity;
-
-  private static final String CHANNEL_ID = "SUPER_BADGE_CHANNEL_ID";
-  private static final int NOTIFICATION_ID = 1;
-  private static final String DRAWABLE = "drawable";
+  private BinaryMessenger binaryMessenger;
+  private MessageHandler messageHandler;
+  private Activity activity;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_super_badge");
-    channel.setMethodCallHandler(this);
-    applicationContext = flutterPluginBinding.getApplicationContext();
-    notificationManager =
-            (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    createNotificationChannel(flutterPluginBinding.getApplicationContext());
-  }
-
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    final String method = call.method;
-    switch (method) {
-      case "updateBadgeCount":
-        updateBadgeCount(result, call.arguments);
-        break;
-      case "removeBadge":
-        removeBadge(result);
-        break;
-      default:
-        result.notImplemented();
-        break;
-    }
+    final Context applicationContext = flutterPluginBinding.getApplicationContext();
+    binaryMessenger = flutterPluginBinding.getBinaryMessenger();
+    messageHandler = new MessageHandler(applicationContext);
+    FlutterSuperBadgeApi.setUp(binaryMessenger, messageHandler);
+    createNotificationChannel(applicationContext);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
+    if (binaryMessenger != null) {
+      FlutterSuperBadgeApi.setUp(binaryMessenger, null);
+      binaryMessenger = null;
+    }
+    messageHandler = null;
   }
 
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
     binding.addOnNewIntentListener(this);
-    mainActivity = binding.getActivity();
+    attachActivity(binding.getActivity());
   }
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
-    mainActivity = null;
+    attachActivity(null);
   }
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
     binding.addOnNewIntentListener(this);
-    mainActivity = binding.getActivity();
+    attachActivity(binding.getActivity());
   }
 
   @Override
   public void onDetachedFromActivity() {
-    mainActivity = null;
+    attachActivity(null);
   }
 
-  private void removeBadge(@NonNull Result result) {
-    try {
-      notificationManager.cancel(NOTIFICATION_ID);
-      ShortcutBadger.removeCount(applicationContext);
-      result.success(null);
-    } catch (Exception e) {
-      result.error("REMOVE_BADGE_FAILED", e.getMessage(), null);
+  @Override
+  public boolean onNewIntent(@NonNull Intent intent) {
+    if (activity != null) {
+      activity.setIntent(intent);
     }
+    return false;
   }
 
-  private void updateBadgeCount(@NonNull Result result, Object arguments) {
-    try {
-      BadgeSettings settings = BadgeSettings.from((HashMap<String, Object>) arguments);
-      Notification notification = createNotification(settings);
-      notificationManager.notify(NOTIFICATION_ID, notification);
-
-      ShortcutBadger.applyCount(applicationContext, settings.count);
-      result.success(null);
-    } catch (Exception e) {
-      result.error("UPDATE_BADGE_COUNT_FAILED", e.getMessage(), null);
+  private void attachActivity(Activity activity) {
+    this.activity = activity;
+    if (messageHandler != null) {
+      messageHandler.setActivity(activity);
     }
-  }
-
-  private Notification createNotification(BadgeSettings settings) {
-    Intent intent = mainActivity.getIntent();
-
-    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      flags |= PendingIntent.FLAG_IMMUTABLE;
-    }
-
-    PendingIntent pendingIntent = PendingIntent.getActivity(
-            applicationContext,
-            NOTIFICATION_ID,
-            intent,
-            flags
-    );
-
-    Builder builder = new Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle(settings.title)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setContentIntent(pendingIntent);
-
-    String customIcon = settings.icon;
-    if (customIcon == null || customIcon.isEmpty()) {
-      builder.setSmallIcon(applicationContext.getApplicationInfo().icon);
-    } else {
-      builder.setSmallIcon(getDrawableResourceId(customIcon));
-    }
-
-    return builder.build();
   }
 
   private static void createNotificationChannel(Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       CharSequence name = context.getString(R.string.channel_name);
       String description = context.getString(R.string.channel_description);
-      int importance =  NotificationManager.IMPORTANCE_LOW;
+      int importance = NotificationManager.IMPORTANCE_LOW;
 
-      NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+      NotificationChannel channel = new NotificationChannel(MessageHandler.CHANNEL_ID, name, importance);
       channel.setDescription(description);
       channel.setShowBadge(true);
 
-      NotificationManager  notificationManager =
+      NotificationManager notificationManager =
               (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       notificationManager.createNotificationChannel(channel);
     }
-  }
-
-  @SuppressLint("DiscouragedApi")
-  private int getDrawableResourceId(String name) {
-    return applicationContext.getResources().getIdentifier(
-            name,
-            DRAWABLE,
-            applicationContext.getPackageName()
-    );
-  }
-
-  @Override
-  public boolean onNewIntent(@NonNull Intent intent) {
-    if (mainActivity != null) {
-      mainActivity.setIntent(intent);
-    }
-    return false;
   }
 }
